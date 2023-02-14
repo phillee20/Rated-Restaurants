@@ -1,5 +1,5 @@
 const express = require("express");
-const getRestaurants = require("./controller");
+const { getRestaurants, postRestaurant } = require("./controller");
 const app = express();
 app.use(express.json());
 
@@ -12,5 +12,7 @@ app.get("/api/restaurants", getRestaurants);
 app.get("/*", (request, response) => {
   response.status(404).send({ msg: "error" });
 });
+
+app.post("/api/restaurants", postRestaurant);
 
 module.exports = app;
