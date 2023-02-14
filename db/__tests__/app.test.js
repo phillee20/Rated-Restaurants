@@ -1,23 +1,44 @@
-const request = require('supertest');
-const app = require('../app');
+const request = require("supertest");
+const app = require("../app");
+const restaurants = require("../data/restaurants");
 
-describe('app', () => {
-    describe('GET/api', () => {
-        it('200: GET responds with server ok message', () => {
-            return request(app)
-                .get("/api")
-                .expect(200)
-                .then((response) => {
-                    expect(response.body.msg).toBe("all good here")
-                });
-        })
-        it('404: GET responds with error', () => {
-            return request(app)
-                .get("/bananas")
-                .expect(404)
-                .then((response) => {
-                    expect(response.body.msg).toBe("error")
-                });
-        })
-    })
-})
+describe("app", () => {
+  describe("GET/api", () => {
+    it("200: GET responds with server ok message", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.msg).toBe("all good here");
+        });
+    });
+    it("404: GET responds with error", () => {
+      return request(app)
+        .get("/bananas")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("error");
+        });
+    });
+  });
+  describe("GET/api/restaurants", () => {
+    it("200: GET responds with restaurants data", () => {
+      return request(app)
+        .get("/api/restaurants")
+        .expect(200)
+        .then(({ body }) => {
+          body.restaurants.forEach((restaurant) => {
+            expect(restaurant).toEqual(
+              expect.objectContaining({
+                restaurant_id: expect.any(Number),
+                restaurant_name: expect.any(String),
+                area_id: expect.any(Number),
+                cuisine: expect.any(String),
+                website: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+  });
+});
