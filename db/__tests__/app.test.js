@@ -1,6 +1,17 @@
 const request = require("supertest");
 const app = require("../app");
-const restaurants = require("../data/restaurants");
+const data = require("../data/index");
+const connection = require("../connection");
+const { seed } = require("../seed");
+
+beforeEach(() => {
+    return seed(data);
+});
+
+afterAll(() => {
+    return connection.end();
+});
+
 
 describe("app", () => {
   describe("GET/api", () => {
@@ -41,4 +52,21 @@ describe("app", () => {
         });
     });
   });
+  describe('POST/api/restaurants', () => {
+    it('201: POST responds with newly inserted restaurant', () => {
+        const restaurantBody = {
+            "restaurant_name": "The Codfather",
+            "area_id": 2,
+            "cuisine": "British",
+            "website": "www.thecodfather.com"
+          };
+        return request(app)
+        .post('/api/restaurants')
+        .send(restaurantBody)
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.restaurant).toEqual({ restaurant_id : 9, ...restaurantBody })
+        })
+    })
+  })
 });
