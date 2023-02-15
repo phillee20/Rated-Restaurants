@@ -1,5 +1,4 @@
-const { fetchRestaurants, insertRestaurant } = require("../db/models");
-const handle500Statuses = require("./errorController");
+const { fetchRestaurants, insertRestaurant, removeRestaurant } = require("../db/models");
 
 const getRestaurants = (request, response, next) => {
   fetchRestaurants()
@@ -7,6 +6,7 @@ const getRestaurants = (request, response, next) => {
       response.status(200).send({ restaurants });
     })
     .catch((err) => {
+      console.log("Hi we're in the getRestaurants catch block!!!")
       next(err);
     });
 };
@@ -24,4 +24,14 @@ const postRestaurant = (request, response, next) => {
     });
 };
 
-module.exports = { getRestaurants, postRestaurant };
+const deleteRestaurant = (request, response) => {
+  const { restaurant_id } = request.params;
+  console.log(restaurant_id);
+
+  removeRestaurant(restaurant_id).then((restaurant) => {
+    console.log(restaurant, "this is the deleteRestaurant console log")
+    response.status(204).send({msg: "no content"});
+  });
+}
+
+module.exports = { getRestaurants, postRestaurant, deleteRestaurant };
