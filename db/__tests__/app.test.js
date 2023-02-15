@@ -87,4 +87,14 @@ describe("app", () => {
         });
     });
   });
+  describe.skip('DELETE /api/restaurants/:restaurant_id', () => {
+    it('204: DELETE the specified restaurant from the database', () => {
+        return request(app)//arrange?
+            .delete("/api/restaurants/1")//act
+            .expect(204)
+            .then(({body}) => {
+                expect(body.msg).toBe("no content");
+            });
+    })
+  })
 });
