@@ -22,4 +22,15 @@ const insertRestaurant = (restaurant_name, area_id, cuisine, website) => {
     });
 };
 
-module.exports = { fetchRestaurants, insertRestaurant };
+const removeRestaurant = (restaurant_id) => {
+  return db.query(`
+      DELETE FROM restaurants
+      WHERE restaurant_id = $1
+      RETURNING *;
+  `, [restaurant_id]).then(({ rows }) => {
+      console.log(rows[0]);
+      return rows[0];
+  })
+}
+
+module.exports = { fetchRestaurants, insertRestaurant, removeRestaurant };
