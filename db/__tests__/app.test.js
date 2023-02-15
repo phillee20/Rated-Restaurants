@@ -5,13 +5,12 @@ const connection = require("../connection");
 const { seed } = require("../seed");
 
 beforeEach(() => {
-    return seed(data);
+  return seed(data);
 });
 
 afterAll(() => {
-    return connection.end();
+  return connection.end();
 });
-
 
 describe("app", () => {
   describe("GET/api", () => {
@@ -52,21 +51,40 @@ describe("app", () => {
         });
     });
   });
-  describe('POST/api/restaurants', () => {
-    it('201: POST responds with newly inserted restaurant', () => {
-        const restaurantBody = {
-            "restaurant_name": "The Codfather",
-            "area_id": 2,
-            "cuisine": "British",
-            "website": "www.thecodfather.com"
-          };
-        return request(app)
-        .post('/api/restaurants')
+  describe("POST/api/restaurants", () => {
+    it("201: POST responds with newly inserted restaurant", () => {
+      const restaurantBody = {
+        restaurant_name: "The Codfather",
+        area_id: 2,
+        cuisine: "British",
+        website: "www.thecodfather.com",
+      };
+      return request(app)
+        .post("/api/restaurants")
         .send(restaurantBody)
         .expect(201)
         .then(({ body }) => {
-            expect(body.restaurant).toEqual({ restaurant_id : 9, ...restaurantBody })
-        })
-    })
-  })
+          expect(body.restaurant).toEqual({
+            restaurant_id: 9,
+            ...restaurantBody,
+          });
+        });
+    });
+    it("400: POST responds with bad request", () => {
+      const restaurantBody = {
+        restaurant_nameee: "The Codfather",
+        area_id: 2,
+        cuisine: "British",
+        website: "www.thecodfather.com",
+      };
+      return request(app)
+        .post("/api/restaurants")
+        .send(restaurantBody)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Data");
+          console.log(body.msg);
+        });
+    });
+  });
 });

@@ -1,5 +1,13 @@
 const express = require("express");
-const { getRestaurants, postRestaurant } = require("./controller");
+const {
+  getRestaurants,
+  postRestaurant,
+} = require("../Controllers/restaurantsController");
+const {
+  handle400Statuses,
+  handle500Statuses,
+} = require("../Controllers/errorController");
+
 const app = express();
 app.use(express.json());
 
@@ -14,5 +22,8 @@ app.get("/*", (request, response) => {
 });
 
 app.post("/api/restaurants", postRestaurant);
+
+app.use(handle400Statuses);
+app.use(handle500Statuses);
 
 module.exports = app;

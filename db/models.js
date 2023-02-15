@@ -7,16 +7,19 @@ const fetchRestaurants = () => {
 };
 
 const insertRestaurant = (restaurant_name, area_id, cuisine, website) => {
-
-  return db.query(`
+  return db
+    .query(
+      `
     INSERT INTO restaurants 
       (restaurant_name, area_id, cuisine, website)
       VALUES
       ($1, $2, $3, $4)
-    RETURNING *;`, [restaurant_name, area_id, cuisine, website])
+    RETURNING *;`,
+      [restaurant_name, area_id, cuisine, website]
+    )
     .then(({ rows }) => {
       return rows[0];
-    })
-}
+    });
+};
 
-module.exports = {fetchRestaurants, insertRestaurant};
+module.exports = { fetchRestaurants, insertRestaurant };
