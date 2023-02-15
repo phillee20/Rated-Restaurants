@@ -2,10 +2,11 @@ const express = require("express");
 const {
   getRestaurants,
   postRestaurant,
+  deleteRestaurant
 } = require("../Controllers/restaurantsController");
 const {
   handle400Statuses,
-  handle500Statuses,
+  handle500Statuses
 } = require("../Controllers/errorController");
 
 const app = express();
@@ -22,6 +23,8 @@ app.get("/*", (request, response) => {
 });
 
 app.post("/api/restaurants", postRestaurant);
+
+app.delete("/api/restaurants/:restaurant_id", deleteRestaurant);
 
 app.use(handle400Statuses);
 app.use(handle500Statuses);
