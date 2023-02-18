@@ -1,23 +1,23 @@
 const express = require("express");
-const {
-  getRestaurants,
-  postRestaurant,
-  deleteRestaurant
-} = require("../Controllers/restaurantsController");
-const {
-  handle400Statuses,
-  handle500Statuses
-} = require("../Controllers/errorController");
-
 const app = express();
 app.use(express.json());
 
-app.get("/api", (request, response) => {
-  response.status(200).send({ msg: "all good here" });
-});
+const {
+  getAPI,
+  getRestaurants,
+  postRestaurant,
+  deleteRestaurant,
+} = require("../Controllers/restaurantsController");
+const {
+  handle400Statuses,
+  handle500Statuses,
+} = require("../Controllers/errorController");
+
+app.get("/api", getAPI);
 
 app.get("/api/restaurants", getRestaurants);
 
+//To be refactored
 app.get("/*", (request, response) => {
   response.status(404).send({ msg: "error" });
 });

@@ -37,8 +37,8 @@ describe("app", () => {
         .get("/api/restaurants")
         .expect(200)
         .then(({ body }) => {
-          body.restaurants.forEach((restaurant) => {
-            expect(restaurant).toEqual(
+          body.restaurants.forEach((restaurants) => {
+            expect(restaurants).toEqual(
               expect.objectContaining({
                 restaurant_id: expect.any(Number),
                 restaurant_name: expect.any(String),
@@ -64,6 +64,7 @@ describe("app", () => {
         .send(restaurantBody)
         .expect(201)
         .then(({ body }) => {
+          //console.log(body) Shows newly posted restaurant
           expect(body.restaurant).toEqual({
             restaurant_id: 9,
             ...restaurantBody,
@@ -87,14 +88,14 @@ describe("app", () => {
         });
     });
   });
-  describe.skip('DELETE /api/restaurants/:restaurant_id', () => {
-    it('204: DELETE the specified restaurant from the database', () => {
-        return request(app)//arrange?
-            .delete("/api/restaurants/1")//act
-            .expect(204)
-            .then(({body}) => {
-                expect(body.msg).toBe("no content");
-            });
-    })
-  })
+  describe("DELETE /api/restaurants/:restaurant_id", () => {
+    it("204: DELETE the specified restaurant from the database and responds with an empty object", () => {
+      return request(app)
+        .delete("/api/restaurants/1")
+        .expect(204)
+        .then((response) => {
+          expect(response.body).toEqual({});
+        });
+    });
+  });
 });
