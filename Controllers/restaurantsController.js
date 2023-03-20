@@ -28,19 +28,43 @@ const postRestaurant = (request, response, next) => {
       response.status(201).send({ restaurant });
     })
     .catch((err) => {
-      //console.log(err, "This is post error!");
+      //console.log(err, "This is post error for 400!");
       next(err);
     });
 };
 
-const deleteRestaurant = (request, response) => {
+const deleteRestaurant = (request, response, next) => {
   const { restaurant_id } = request.params;
   //console.log(restaurant_id);
 
-  removeRestaurant(restaurant_id).then((emptyObj) => {
-    //console.log(emptyObj);
-    response.status(204).send(emptyObj);
-  });
+  removeRestaurant(restaurant_id)
+    .then((emptyObj) => {
+      if (!emptyObj) {
+        return {
+          status: 404,
+          msg: `restaurant_id ${restaurant_id} does not exist`,
+        };
+      }
+      response.status(204).send(emptyObj);
+    })
+    .catch(next);
 };
 
-module.exports = { getAPI, getRestaurants, postRestaurant, deleteRestaurant };
+const updateRestaurant = (request, response, next) => {
+  const { restaurant_id } = request.params;
+  const { body } = request;
+  //console.log(body);
+  if (Object.keys(body).length > 0) {
+    updateRestaurantByID(restaurant_id, body).then((updatedRestaurant) => {
+      response.status(200).send({ updatedRestaurant });
+    });
+  }
+};
+
+module.exports = {
+  getAPI,
+  getRestaurants,
+  postRestaurant,
+  deleteRestaurant,
+  updateRestaurant,
+};

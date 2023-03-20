@@ -88,13 +88,44 @@ describe("app", () => {
         });
     });
   });
-  describe("DELETE /api/restaurants/:restaurant_id", () => {
-    it("204: DELETE the specified restaurant from the database and responds with an empty object", () => {
+});
+describe("DELETE /api/restaurants/:restaurant_id", () => {
+  it("204: DELETE the specified restaurant from the database and responds with an empty object", () => {
+    return request(app)
+      .delete("/api/restaurants/1")
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toEqual({});
+      });
+  });
+
+  it("200: Should have length of 8 with one restaurant gone", () => {
+    return request(app)
+      .get("/api/restaurants")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.restaurants).toBeInstanceOf(Array);
+        expect(response.body.restaurants).toHaveLength(8);
+      });
+  });
+
+  it.skip("404: should respond with error when an end point ID does not exist", () => {
+    return request(app)
+      .delete("/api/restaurants/88")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("restaurant_id 88 does not exist");
+      });
+  });
+
+  describe.skip("PATCH: api/restaurants/:restaurant_id", () => {
+    it("200: should respond with updated restaurant object", () => {
       return request(app)
-        .delete("/api/restaurants/1")
-        .expect(204)
-        .then((response) => {
-          expect(response.body).toEqual({});
+        .patch("/api/restaurant/3")
+        .send({ area_id: 2 })
+        .expect(200)
+        .then((restaurant) => {
+          expect(restaurant.area.id).toBe(2);
         });
     });
   });

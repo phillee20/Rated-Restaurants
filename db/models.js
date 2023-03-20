@@ -37,4 +37,25 @@ const removeRestaurant = (restaurant_id) => {
     });
 };
 
-module.exports = { fetchRestaurants, insertRestaurant, removeRestaurant };
+const updateRestaurantByID = (restaurant_id, restaurantBody) => {
+  return db
+    .query(
+      `
+  UPDATE restaurants
+  SET $1 = $2
+  WHERE restaurant_id = $3
+  RETURNING *;
+  `,
+      [restaurantBody, restaurantBody.area_id, restaurant_id]
+    )
+    .then((updatedRestaurant) => {
+      return updatedRestaurant.rows[0];
+    });
+};
+
+module.exports = {
+  fetchRestaurants,
+  insertRestaurant,
+  removeRestaurant,
+  updateRestaurantByID,
+};
